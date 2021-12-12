@@ -1,0 +1,27 @@
+{
+  "name": "CricInfo-WebScrapper",
+  "version": "1.0.0",
+  "description": "A WebScrapping Project in which the user can scrap data from ESPN Website and store it in the local machine in the form of PDF in the respective folder of everyteam.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adar5h/CricInfo-WebScrapper.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adar5h/CricInfo-WebScrapper/issues"
+  },
+  "homepage": "https://github.com/adar5h/CricInfo-WebScrapper#readme",
+  "dependencies": {
+    "axios": "^0.24.0",
+    "excel4node": "^1.7.2",
+    "jsdom": "^19.0.0",
+    "minimist": "^1.2.5",
+    "pdf-lib": "^1.17.1"
+  }
+}
