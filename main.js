@@ -4,7 +4,7 @@
 // npm install excel4node
 // npm install pdf-lib
 
-// node main.js --excel=WorldCup.csv --dataFolder=data --source=https://www.espncricinfo.com/series/icc-cricket-world-cup-2019-1144415/match-results
+// node main.js --excel=WorldCup.csv --dataFolder=data --url=https://www.espncricinfo.com/series/icc-cricket-world-cup-2019-1144415/match-results
 
 let minimist = require('minimist');
 let axios = require('axios');
@@ -14,52 +14,85 @@ let pdf = require('pdf-lib');
 
 let args = minimist(process.argv);
 
-let responsePromise = axios.get(args.source);     // Getting data from the source
+let responsePromise = axios.get(args.url);
 responsePromise.then(function(response){
+
+    // if(response.statusCode != 200){
+    //     return;
+    // }
+
+    /* How a browser functions. Because the browser knows HTTP,
+     but axios makes a request object and
+    gives us the response along with other resources like status code etc.  */
+
+
+
     let html = response.data;
     let dom = new jsdom.JSDOM(html);
     let document = dom.window.document;
+    
+    let matchDivs = document.querySelectorAll('div.match-score-block'); // Will give an array of the selected query's given div.
 
-    let matchScoreDiv = document.querySelectorAll('div.match-score-block');
-    // console.log(matchScoreDiv.length);
+    let matches = [];
 
-    let matches = []; // An array in which all the scraped information will be pushed
+    for(let i = 0; i < matchDivs.length; i++){
 
-    for(let i = 0; i < matchScoreDiv.length; i++){
-        let match = { // Object
+        let matchDiv = matchDivs[i];
+        let match = { 
             
+            t1: "",
+            t2: "",
+            t1Score: "",
+            t2Score: "",
+            result: ""
         };
+
+        let teamPs = matchDiv.querySelectorAll('p.name');
+        match.t1 = teamPs[0].textContent;
+        match.t2 = teamPs[1].textContent;
+
+        let tScore = matchDiv.querySelectorAll('div.score-detail > span.score');
         
-        let namePs = matchScoreDiv[i].querySelectorAll('p.name');
-        match.t1 = namePs[0].textContent;
-        match.t2 = namePs[1].textContent;  
+        // console.log(i); // At 30th block we have a value where the match was abandoned. Thus there is no score value. To deal with this type of problem.
+        // We use basic logics like 
 
-        let scoreSpan = matchScoreDiv[i].querySelectorAll('div.score-detail > span.score');
-        match.t1s = "";
-        match.t2s = "";
-
-        if(scoreSpan.length == 2){     // Special Case, to check if the match was abandoned or was not completed.
-            match.t1s = scoreSpan[0].textContent;
-            match.t2s = scoreSpan[1].textContent;
-        }else if(scoreSpan.length == 1){
-            match.t1s = scoreSpan[0].textContent;
-            match.t2s = "";
-        match.t2s = "";
+        if(tScore.length == 2){
+            match.t1Score = tScore[0].textContent;
+            match.t2Score = tScore[1].textContent;
+        }else if(tScore.length == 1){
+            match.t1Score = tScore[0].textContent;
+            match.t2Score = "";
         }else{
-            match.t1s = "";
-            match.t2s = "";
+            match.t1Score = "";
+            match.t2Score = "";
         }
 
-        let result = matchScoreDiv[i].querySelector('div.status-text > span');
-        match.result = result.textContent;
+        let conclusion = matchDiv.querySelector('div.status-text > span'); // Just query selector because result is obviously the same for both the teams. Lame I know, but being lame in beginning makes you good at it.
+        match.result = conclusion.textContent;
+
 
         matches.push(match);
-        // console.log(i); -> To get to the check point where the code was breaking.
-    }
+        
 
+    }
     console.log(matches);
 
-}).catch(function(err){
-    console.log(err);
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
