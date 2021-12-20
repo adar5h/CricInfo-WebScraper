@@ -1,2 +1,2 @@
 # CricInfo-WebScraper
-A WebScraping Project in which the user can scrap data from ESPN Website and store it in the local machine in the form of PDF in the respective folder of everyteam.
+A WebScraping Project - The user can scrap data from ESPN Website and store it in the local machine in the form of PDF in the respective folder of every team.
