@@ -102,3 +102,14 @@ dist
 
 # TernJS port file
 .tern-port
+
+mainPseudo.js
+matches_pseudo.json
+Worldcup_pseudo.csv
+teams_pseudo.json
+/data
+
+
+
+
+
